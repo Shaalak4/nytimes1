@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Top Stories</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="">
+    <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Arvo&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<style>
+    img {
+        height: 300px;
+        width: 300px;
+        object-fit: fill;
+    }
+    
+    body {
+        background-color: blue;
+        padding-top: 100px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: 100;
+    }
+    
+    div {
+        margin: auto;
+    }
+    
+    .corn {
+        border-radius: 15px;
+        padding: 40px;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        overflow: hidden;
+    }
+    
+    .main {
+        padding: 16px;
+        margin-top: 30px;
+    }
+    
+    .sidenav {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: rgb(204, 199, 199);
+        overflow-x: hidden;
+        transition: 0.5s;
+        padding-top: 60px;
+    }
+    
+    .sidenav a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 25px;
+        color: #000000;
+        display: block;
+        transition: 0.3s;
+    }
+    
+    .sidenav a:hover {
+        color: #f1f1f1;
+    }
+    
+    .sidenav .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+    }
+    
+    @media screen and (max-height: 450px) {
+        .sidenav {
+            padding-top: 15px;
+        }
+        .sidenav a {
+            font-size: 18px;
+        }
+    }
+</style>
+
+<body id="main">
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="#">About</a>
+        <a href="#">Services</a>
+        <a href="#">Clients</a>
+        <a href="#">Contact</a>
+    </div>
+
+    <h2></h2>
+    <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; </span>
+
+
+    <!-- <div class="card mb-3" style="max-width: 540px;">
+        <div class="row no-gutters">
+            <div class="col-md-8">
+                <div class="card-body">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <img src="G36C.png" class="card-img" alt="...">
+            </div>
+        </div>
+    </div> -->
+
+    <script>
+        //creating a div element
+
+        var container = document.createElement("div"); // Main div 
+        document.getElementById("main").appendChild(container); // for the row styling 
+        container.classList.add("main")
+
+
+
+        const url = "https://api.nytimes.com/svc/topstories/v2/home.json?api-key=d8WbTHN5Qw1rbQANljm3E5aWUze07PAr"
+        async function top_stories() {
+            const response = await fetch(url)
+            const data = await response.json()
+            data.results.forEach(element => {
+                var Card_main = document.createElement("div") //for the each div
+                var Card_r = document.createElement("div") //for the row styling
+                var Card_body = document.createElement("div") //for different
+                var Card_des = document.createElement("div") //for body or description
+                var Card_img = document.createElement("div") // img
+
+
+                //styles
+                Card_main.setAttribute("style", "max-width: 1000px;")
+                Card_main.classList.add("card", "mb-3");
+                Card_r.classList.add("col-md-8");
+                Card_body.classList.add("card-body");
+                Card_img.classList.add("col-md-4");
+                Card_des.classList.add("row", "no-gutters");
+
+                // content
+                var Heading = document.createElement("h1");
+                var thumbnail = document.createElement("img");
+                thumbnail.classList.add("card-img")
+                var description = document.createElement("p");
+                var update = document.createElement("p");
+                var link = document.createElement("a");
+                var cover = document.createElement("h4")
+                var itemtype = document.createElement("h4")
+                    //thumbnail.src = "G36C.png"
+
+                Card_img.appendChild(thumbnail);
+                Card_body.appendChild(Heading);
+                Card_body.appendChild(itemtype)
+                Card_body.appendChild(update);
+                Card_body.appendChild(description);
+                Card_body.appendChild(link);
+
+
+
+                Card_r.appendChild(Card_body)
+                Card_des.appendChild(Card_r);
+
+                Card_des.appendChild(Card_img);
+                Card_main.appendChild(Card_des);
+
+                container.appendChild(Card_main);
+                thumbnail.src = data.results[data.results.indexOf(element)].multimedia[4].url
+                itemtype.innerHTML = data.results[data.results.indexOf(element)].item_type
+                link.href = data.results[data.results.indexOf(element)].url
+                link.innerHTML = "Continue reading.."
+                Heading.innerHTML = data.results[data.results.indexOf(element)].title
+                description.innerHTML = data.results[data.results.indexOf(element)].abstract
+                var d = new Date(data.results[data.results.indexOf(element)].published_date)
+                update.classList.add("text-muted")
+                var months = ["jan", "feb", "mar", "may", "june", "july", "aug", "sep", "oct", "nov", "dec"]
+                var day = []
+                update.innerHTML = d.getDate() + " " + months[d.getMonth()-1] + " " + d.getHours() + ":" + d.getMinutes();
+
+
+            });
+
+
+        }
+        top_stories();
+
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+        }
+    </script>
+</body>
+
+</html>
+© 2020 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Help
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
